@@ -2,42 +2,47 @@ package com.movieHive.service.impl;
 
 import com.movieHive.service.FileService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 @Service
-@AllArgsConstructor
 public class FileServiceImpl implements FileService {
+
+    @Value("${project.poster}")
+    private String posterDir;
+
     @Override
     public String uploadFile(String path, MultipartFile file) throws IOException {
-        //get name of the file
+        // Get the name of the file
         String fileName = file.getOriginalFilename();
 
-        //to get the file path
-        String filePath = path + File.separator + fileName;
+        // Combine the base path (posterDir) with the provided path
+        Path basePath = Paths.get(posterDir, path);
 
-        //create a file object
-        File f = new File(filePath);
-        if (!f.exists()) {
-            f.mkdir();
+        // Ensure the parent directory exists
+        if (!Files.exists(basePath)) {
+            Files.createDirectories(basePath);
         }
 
-        //copy the file or upload file to the path
-        Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+        // Get the file path
+        Path filePath = basePath.resolve(fileName);
+
+        // Copy the file or upload the file to the path
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         return fileName;
     }
 
     @Override
-    public InputStream getResourceFile(String path, String name) throws FileNotFoundException {
-        return null;
+    public InputStream getResourceFile(String path, String filename) throws FileNotFoundException {
+        String filePath = posterDir + File.separator + path + File.separator + filename;
+        return new FileInputStream(filePath);
     }
 }
