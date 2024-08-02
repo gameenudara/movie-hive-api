@@ -21,6 +21,7 @@ public class FileController {
     @Value("${project.poster}")
     private String path;
 
+
     public FileController(FileService fileService) {
         this.fileService = fileService;
     }
@@ -31,7 +32,7 @@ public class FileController {
         return ResponseEntity.ok("File uploaded successfully" + uploadedFileName);
     }
 
-    @GetMapping("/{filename}")
+    @GetMapping(value = "/{filename}")
     public void serverFileHandler(@PathVariable String filename, HttpServletResponse response) throws IOException {
         InputStream resourceFile = fileService.getResourceFile(path, filename);
         response.setContentType(MediaType.IMAGE_PNG_VALUE);

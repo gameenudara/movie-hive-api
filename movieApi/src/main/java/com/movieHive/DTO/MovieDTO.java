@@ -25,7 +25,8 @@ public class MovieDTO {
 
     private Set<String> movieCast;
 
-    private Integer releaseYear;
+    @NotBlank(message = "please provide movie's releaseYear !")
+    private String releaseYear;
 
     @NotBlank(message = "please provide movie's poster !")
     private String poster;

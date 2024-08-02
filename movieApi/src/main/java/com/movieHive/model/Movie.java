@@ -1,7 +1,10 @@
 package com.movieHive.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.Set;
@@ -32,7 +35,7 @@ public class Movie {
 
     @Column(nullable = false)
     @NotBlank(message = "please provide movie's release year !")
-    private Integer releaseYear;
+    private String releaseYear;
 
     @Column(nullable = false)
     @NotBlank(message = "please provide movie's poster !")
