@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,7 +42,7 @@ public class MovieServiceImpl implements MovieService {
         movie.setPoster(movieDTO.getPoster());
 
         Movie savedMovie = movieRepository.save(movie);
-        String posterUrl = "/file" + uploadFileName;
+        String posterUrl = "/file/" + uploadFileName;
 
         MovieDTO response = new MovieDTO(
                 savedMovie.getId(),
@@ -59,12 +60,55 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDTO getMovie(Long id) {
-        return null;
+
+        Movie movie = movieRepository.findById(id).orElseThrow(()->new RuntimeException("Movie not found"));
+
+        String PosterUrl = posterDir +"/file/" + movie.getPoster();
+
+            MovieDTO response = new MovieDTO(
+                    movie.getId(),
+                    movie.getTitle(),
+                    movie.getDirector(),
+                    movie.getStudio(),
+                    movie.getMovieCast(),
+                    movie.getReleaseYear(),
+                    movie.getPoster(),
+                    PosterUrl
+            );
+
+        return response;
     }
 
     @Override
     public List<MovieDTO> getAllMovies() {
-        return List.of();
+        List<Movie> movies = movieRepository.findAll();
+        List<MovieDTO> movieDTOList = new ArrayList<>();
+
+        for (Movie movie : movies) {
+            String PosterUrl = posterDir +"/file/" + movie.getPoster();
+            MovieDTO response = new MovieDTO(
+                    movie.getId(),
+                    movie.getTitle(),
+                    movie.getDirector(),
+                    movie.getStudio(),
+                    movie.getMovieCast(),
+                    movie.getReleaseYear(),
+                    movie.getPoster(),
+                    PosterUrl
+            );
+            movieDTOList.add(response);
+        }
+        return movieDTOList;
+    }
+
+    @Override
+    public MovieDTO updateMovie(Long id, MovieDTO movieDTO, MultipartFile file) throws IOException {
+        return null;
+    }
+
+    @Override
+    public String deleteMovie(Long id) {
+        return null;
     }
 }
 
