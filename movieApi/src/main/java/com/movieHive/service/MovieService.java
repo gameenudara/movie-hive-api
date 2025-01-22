@@ -9,6 +9,7 @@ import java.util.List;
 
 @Service
 public interface MovieService {
+
     MovieDTO addMovie(MovieDTO movieDTO, MultipartFile file) throws IOException;
 
     MovieDTO getMovie(Long id);
@@ -17,5 +18,5 @@ public interface MovieService {
 
     MovieDTO updateMovie(Long id, MovieDTO movieDTO, MultipartFile file) throws IOException;
 
-    String deleteMovie(Long id);
+    String deleteMovie(Long id) throws IOException;
 }
